@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PVT ULTIMATE</title>
+    <style>
+        /* Modern UI Variables */
+        :root {
+            --bg-color: #121212;
+            --text-color: white;
+            --card-bg: rgba(255, 255, 255, 0.1);
+            --btn-bg: linear-gradient(145deg, #1e1e1e, #2a2a2a);
+            --highlight-color: #00aaff;
+            --shadow: rgba(0, 255, 255, 0.3);
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        .container {
+            width: 95%;
+            max-width: 400px;
+            padding: 20px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 8px 20px var(--shadow);
+            text-align: center;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .header {
+            display: flex;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        .info {
+            font-size: 14px;
+            font-weight: bold;
+            text-align: left;
+            margin-top: 15px;
+        }
+
+        .info span {
+            color: var(--highlight-color);
+        }
+
+        .game-box {
+            display: flex;
+            justify-content: space-between;
+            font-size: 22px;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            margin-top: 10px;
+        }
+
+        .prediction {
+            font-size: 50px;
+            font-weight: bold;
+            color: var(--highlight-color);
+            margin: 20px 0;
+            text-shadow: 0 0 20px var(--shadow);
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+        }
+
+        .button {
+            flex: 1;
+            padding: 14px;
+            font-size: 16px;
+            font-weight: bold;
+            color: white;
+            background: var(--btn-bg);
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 5px 12px var(--shadow);
+        }
+
+        .button:hover {
+            background: #00aaff;
+            box-shadow: 0 6px 16px rgba(0, 255, 255, 0.5);
+            transform: translateY(-3px);
+        }
+
+        /* Burst Effect */
+        .burst {
+            animation: burst 0.5s ease-in-out;
+        }
+
+        @keyframes burst {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.5); opacity: 0.6; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header" id="headerClick">
+            ANXT ULTIMATE 👑
+        </div>
+
+        <div class="info">
+            <p>❗ WINGO 1 MIN</p>
+            <p>🧪 MODE SELECTED: <span id="modeText">BIG/SMALL</span></p>
+            <p>🎮 SERVER: <span>AI SERVER</span></p>
+        </div>
+
+        <div class="game-box">
+            <div id="period">Loading...</div>
+            <div id="timer">Loading...</div>
+        </div>
+
+        <div class="prediction" id="prediction">WAITING...</div>
+
+        <div class="buttons">
+            <button class="button" id="resultBtn">RESULT</button>
+            <button class="button" id="changeModeBtn">CHANGE MODE</button>
+        </div>
+    </div>
+
+    <script>
+        let mode = "BIG/SMALL";
+        let lastPeriod = "";
+        let lastResult = "";
+        let resultTypes = {
+            "BIG/SMALL": ["BIG 0", "BIG 1", "BIG 2", "BIG 3", "BIG 4", "SMALL 9", "SMALL 8", "SMALL 7", "SMALL 6", "SMALL 5"],
+            "RED/GREEN": ["RED 0", "RED 1", "RED 2", "RED 3", "RED 4", "GREEN 9", "GREEN 8", "GREEN 7", "GREEN 6", "GREEN 5"]
+        };
+
+        function updatePeriodAndTimer() {
+            let now = new Date();
+            let seconds = now.getSeconds();
+            let remainingSeconds = 60 - seconds;
+
+            let start = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 5, 29);
+            let elapsedMinutes = Math.max(0, Math.floor((now - start) / 60000));
+
+            let period = now.getFullYear().toString() + ("0" + (now.getMonth() + 1)).slice(-2) + ("0" + now.getDate()).slice(-2) + "100001" + ("0000" + elapsedMinutes).slice(-4);
+            
+            document.getElementById("period").innerText = period;
+            document.getElementById("timer").innerText = "00:" + (remainingSeconds < 10 ? "0" : "") + remainingSeconds;
+
+            if (period !== lastPeriod) {
+                lastResult = resultTypes[mode][Math.floor(Math.random() * 10)];
+            }
+
+            lastPeriod = period;
+        }
+
+        document.getElementById("resultBtn").onclick = () => {
+            document.getElementById("prediction").innerText = lastResult;
+            document.getElementById("prediction").classList.add("burst");
+            setTimeout(() => document.getElementById("prediction").classList.remove("burst"), 500);
+        };
+
+        document.getElementById("changeModeBtn").onclick = () => {
+            mode = mode === "BIG/SMALL" ? "RED/GREEN" : "BIG/SMALL";
+            document.getElementById("modeText").innerText = mode;
+        };
+
+        document.getElementById("headerClick").onclick = () => window.open("https://t.me/Aneaxity");
+
+        setInterval(updatePeriodAndTimer, 1000);
+    </script>
+
+</body>
+</html>
